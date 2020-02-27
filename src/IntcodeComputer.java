@@ -2,7 +2,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
-//Hello, test, test
 
 public class IntcodeComputer {
 	private ArrayList<Integer> opcodes;
