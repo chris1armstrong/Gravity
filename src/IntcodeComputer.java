@@ -1,32 +1,80 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class IntcodeComputer {
-	private HashMap<Integer,Integer> opcodes;
+	private ArrayList<Integer> opcodes;
 	
 	public IntcodeComputer() {
-		this.opcodes = new HashMap<Integer,Integer>(); 
+		this.opcodes = new ArrayList<Integer>(); 
 	}
 	
 	public static void main(String[] args) throws FileNotFoundException {
-		File input = new File("input.txt");
+		File input = new File("input2.txt");
 		Scanner reader = new Scanner(input);
 		
-		IntcodeComputer system = new IntcodeComputer();
-		Integer position = 0;
+		IntcodeComputer computer = new IntcodeComputer();
 		String line = reader.next();
 		String[] nums = line.split(",");
 		for (String i : nums) {
-			system.opcodes.put(position, Integer.parseInt(i));
-			position++;
+			computer.opcodes.add(Integer.parseInt(i));
 		}
 		
 		reader.close();
-		System.out.println(system.calculateGravity(nums));
+		
+		computer.performOperations();
+		System.out.println("DONE");
+	}
+
+	private void performOperations() {
+		Boolean valid = true;
+		Integer current = 0;
+		Integer advance = 0;
+		Integer firstVal;
+		Integer secondVal;
+		Integer result;
+		Scanner scan = new Scanner(System.in);
+		while(valid) {
+			switch (this.opcodes.get(current)) {
+				case 1 :
+					firstVal = this.opcodes.get(this.opcodes.get(current+1));
+					secondVal = this.opcodes.get(this.opcodes.get(current+2));
+					result = firstVal + secondVal;
+					this.opcodes.set(this.opcodes.get(current+3), result);
+					advance = 4;
+					break;
+				case 2 :
+					firstVal = this.opcodes.get(this.opcodes.get(current+1));
+					secondVal = this.opcodes.get(this.opcodes.get(current+2));
+					result = firstVal * secondVal;
+					this.opcodes.set(this.opcodes.get(current+3), result);
+					advance = 4;
+					break;
+				case 3 :
+					System.out.println("Input: ");
+					result = Integer.parseInt(scan.next());
+					firstVal = this.opcodes.get(this.opcodes.get(current+1));
+					this.opcodes.set(firstVal, result);
+					advance = 2;
+					break;
+				case 4 :
+					firstVal = this.opcodes.get(this.opcodes.get(current+1));
+					System.out.println(this.opcodes.get(firstVal));
+					advance = 2;
+					break;
+				case 99 :
+					valid = false;
+					break;
+				default :
+					valid = false;
+			}
+			current = current + advance;
+		}
+		scan.close();
 	}
 	
+	/*
 	public Integer calculateGravity(String[] nums) {
 		Boolean valid = true;
 		Integer current = 0;
@@ -59,11 +107,9 @@ public class IntcodeComputer {
 							this.opcodes.put(this.opcodes.get(current+3), result);
 							break;
 						case 99 :
-							System.out.println("Done");
 							valid = false;
 							break;
 						default :
-							System.out.println("You have made a dumb");
 							valid = false;
 					}
 					current = current + 4;
@@ -88,4 +134,5 @@ public class IntcodeComputer {
 		}
 		return 0;
 	}
+	*/
 }
