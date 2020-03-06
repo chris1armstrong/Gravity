@@ -30,7 +30,6 @@ public class IntcodeComputer {
 	private void performOperations() {
 		Boolean valid = true;
 		Integer current = 0;
-		Integer advance = 0;
 		
 		String fullcode;
 		Integer opcode;
@@ -62,7 +61,7 @@ public class IntcodeComputer {
 					}
 					result = firstVal + secondVal;
 					this.opcodes.set(this.opcodes.get(current+3), result);
-					advance = 4;
+					current = current + 4;
 					break;
 				case 2 :
 					if (argMode1 != 0) {
@@ -77,14 +76,14 @@ public class IntcodeComputer {
 					}
 					result = firstVal * secondVal;
 					this.opcodes.set(this.opcodes.get(current+3), result);
-					advance = 4;
+					current = current + 4;
 					break;
 				case 3 :
 					System.out.println("Input: ");
 					result = Integer.parseInt(scan.next());
 					firstVal = this.opcodes.get(current+1);
 					this.opcodes.set(firstVal, result);
-					advance = 2;
+					current = current + 2;
 					break;
 				case 4 :
 					if (argMode1 != 0) {
@@ -93,7 +92,81 @@ public class IntcodeComputer {
 						firstVal = this.opcodes.get(this.opcodes.get(current+1));
 					}
 					System.out.println(firstVal);
-					advance = 2;
+					current = current + 2;
+					break;
+				case 5 :
+					if (argMode1 != 0) {
+						firstVal = this.opcodes.get(current+1);
+					} else {
+						firstVal = this.opcodes.get(this.opcodes.get(current+1));
+					}
+					if (argMode2 != 0) {
+						secondVal = this.opcodes.get(current+2);
+					} else {
+						secondVal = this.opcodes.get(this.opcodes.get(current+2));
+					}
+					
+					if (!firstVal.equals(0)) {
+						current = secondVal;
+					} else {
+						current = current + 3;
+					}
+					break;
+				case 6 :
+					if (argMode1 != 0) {
+						firstVal = this.opcodes.get(current+1);
+					} else {
+						firstVal = this.opcodes.get(this.opcodes.get(current+1));
+					}
+					if (argMode2 != 0) {
+						secondVal = this.opcodes.get(current+2);
+					} else {
+						secondVal = this.opcodes.get(this.opcodes.get(current+2));
+					}
+					
+					if (firstVal.equals(0)) {
+						current = secondVal;
+					} else {
+						current = current + 3;
+					}
+					break;
+				case 7 :
+					if (argMode1 != 0) {
+						firstVal = this.opcodes.get(current+1);
+					} else {
+						firstVal = this.opcodes.get(this.opcodes.get(current+1));
+					}
+					if (argMode2 != 0) {
+						secondVal = this.opcodes.get(current+2);
+					} else {
+						secondVal = this.opcodes.get(this.opcodes.get(current+2));
+					}
+					
+					if (firstVal.compareTo(secondVal) < 0) {
+						this.opcodes.set(this.opcodes.get(current+3), 1);
+					} else {
+						this.opcodes.set(this.opcodes.get(current+3), 0);
+					}
+					current = current + 4;
+					break;
+				case 8 :
+					if (argMode1 != 0) {
+						firstVal = this.opcodes.get(current+1);
+					} else {
+						firstVal = this.opcodes.get(this.opcodes.get(current+1));
+					}
+					if (argMode2 != 0) {
+						secondVal = this.opcodes.get(current+2);
+					} else {
+						secondVal = this.opcodes.get(this.opcodes.get(current+2));
+					}
+					
+					if (firstVal.equals(secondVal)) {
+						this.opcodes.set(this.opcodes.get(current+3), 1);
+					} else {
+						this.opcodes.set(this.opcodes.get(current+3), 0);
+					}
+					current = current + 4;
 					break;
 				case 99 :
 					valid = false;
@@ -101,70 +174,7 @@ public class IntcodeComputer {
 				default :
 					valid = false;
 			}
-			current = current + advance;
 		}
 		scan.close();
 	}
-	
-	/*
-	public Integer calculateGravity(String[] nums) {
-		Boolean valid = true;
-		Integer current = 0;
-		Boolean noResult = true;
-		Integer outerLoop = 0;
-		Integer innerLoop = 0;
-		
-		while(noResult) {
-			innerLoop = 0;
-			while(innerLoop < 100) {
-				valid = true;
-				this.opcodes.put(1, outerLoop);
-				this.opcodes.put(2, innerLoop);
-				current = 0;
-				while(valid) {
-					Integer firstVal;
-					Integer secondVal;
-					Integer result;
-					switch (this.opcodes.get(current)) {
-						case 1 :
-							firstVal = this.opcodes.get(this.opcodes.get(current+1));
-							secondVal = this.opcodes.get(this.opcodes.get(current+2));
-							result = firstVal + secondVal;
-							this.opcodes.put(this.opcodes.get(current+3), result);
-							break;
-						case 2 :
-							firstVal = this.opcodes.get(this.opcodes.get(current+1));
-							secondVal = this.opcodes.get(this.opcodes.get(current+2));
-							result = firstVal * secondVal;
-							this.opcodes.put(this.opcodes.get(current+3), result);
-							break;
-						case 99 :
-							valid = false;
-							break;
-						default :
-							valid = false;
-					}
-					current = current + 4;
-				}
-				
-				if (this.opcodes.get(0) == 19690720) {
-					System.out.println("noun: " + outerLoop + " verb: " + innerLoop + " result = " + this.opcodes.get(0));
-					System.out.println("answer= " + (100*outerLoop+innerLoop));
-					noResult = false;
-					break;
-				}
-				
-				//reset codes
-				Integer position = 0;
-				for (String i : nums) {
-					this.opcodes.put(position, Integer.parseInt(i));
-					position++;
-				}
-				innerLoop++;
-			}
-			outerLoop++;
-		}
-		return 0;
-	}
-	*/
 }
